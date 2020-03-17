@@ -4,11 +4,22 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.awt.Graphics;
+import java.io.File;
+import java.awt.Graphics2D;
 import java.nio.Buffer;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.awt.Component;
 import java.awt.image.BufferedImage;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.io.File;
+import javax.imageio.ImageIO;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import java.util.*;
 import java.util.LinkedList;
 
 class pixelData {
@@ -27,12 +38,17 @@ class pixelData {
 
 public class Main {
     public static void main(String[] args) {
-        BufferedImage pixelArtOutput = null;
+        BufferedImage pixelArtOutputImage = null;
+        BufferedImage pixelartInputImage = null;
         int pixel;
         int R,G,B;
+        int deviation;
+        int smallestDeviation = 0;
+        File bestFitting = null;
+        BufferedImage bestFittingImage = null;
         try{
-            File block = new File("C:/Users/jakob/Documents/Programme/MinecraftGeneratorRaw/crafting_table_green.png");
-            File texturFile = new File("C:/Users/jakob/Documents/Programme/MinecraftGeneratorRaw/inputTextures");
+            File block = new File("C:/Users/jakob/IdeaProjects/MinecraftPixelartGenerator/crafting_table_green.png");
+            File texturFile = new File("C:/Users/jakob/IdeaProjects/MinecraftPixelartGenerator/inputTextures");
 
             File[] textureFileArray = texturFile.listFiles();
             LinkedList <pixelData>pixelList = new LinkedList<pixelData>();
@@ -40,25 +56,40 @@ public class Main {
                 pixelList.add(averageRGB(textureFileArray[i]));
             }
 
-            File pixelArtInput = new File("C:/Users/jakob/Documents/Programme/MinecraftGeneratorRaw/pixelArtInput.png");
-            LinkedList <pixelData>pixelListInput = new LinkedList<pixelData>();
-            pixelListInput.add(averageRGB(pixelArtInput)); //Einlesen der Average RGB Werte
-            pixelArtOutput = ImageIO.read(pixelArtInput);
-            int widthPixelart = pixelArtOutput.getWidth();
-            int heightPixelart = pixelArtOutput.getHeight();
+            File pixelArtInput = new File("C:/Users/jakob/IdeaProjects/MinecraftPixelartGenerator/coffee.png");     //Input file
+            pixelartInputImage = ImageIO.read(pixelArtInput);
+            int widthPixelart = pixelartInputImage.getWidth();
+            int heightPixelart = pixelartInputImage.getHeight();
+            pixelArtOutputImage = new BufferedImage(16*widthPixelart,16*heightPixelart,BufferedImage.TYPE_INT_RGB);
             for (int i = 0; i < heightPixelart; i++) {
                 for (int j = 0; j < widthPixelart; j++) {
-                    pixel = pixelArtOutput.getRGB(j, i);
+                    pixel = pixelartInputImage.getRGB(j, i);
                     R = ((pixel >> 16) & 0xff);
                     G = ((pixel >> 8) & 0xff);
                     B = ((pixel) & 0xff);
-                    pixelListInput.add(new pixelData(R, G, B, pixelArtInput));
+                    for(int k = 0; k < pixelList.size(); k++){
+                        deviation = Math.abs(R-pixelList.get(k).r) + Math.abs(G-pixelList.get(k).g) + Math.abs(B-pixelList.get(k).b);
+                        if(k==0){
+                            smallestDeviation = deviation;
+                            bestFitting = pixelList.get(k).graphic;
+                        }
+                        else{
+                            if(deviation < smallestDeviation){
+                                smallestDeviation = deviation;
+                                bestFitting = pixelList.get(k).graphic;
+                            }
+                        }
+                    }
+                    /*System.out.printf("Kleinste Abweichung von Pixel (%d/%d) ", j,i);
+                    System.out.printf("hat " + pixelList.get(bestFitting).graphic + "\n");*/
+                    bestFittingImage = ImageIO.read(bestFitting);
+                    Graphics2D g2 = pixelArtOutputImage.createGraphics();
+                    g2.drawImage(bestFittingImage,null,j*16,i*16);
+                    g2.dispose();
                 }
             }
+            ImageIO.write(pixelArtOutputImage, "png", new File("C:/Users/jakob/IdeaProjects/MinecraftPixelartGenerator/coffeeOutput.png"));     //Output file
 
-            //BufferedImage output = new BufferedImage(16*)
-            System.out.println(pixelList.get(1).g);
-            System.out.println(pixelListInput.get(1).g);
             System.out.println("Done");
         }
         catch (Exception e){
@@ -93,7 +124,6 @@ public class Main {
             R = R / allPixels;
             G = G / allPixels;
             B = B / allPixels;
-            System.out.println("R " + R + ", G " + G + ", B " + B);
             pixelData values = new pixelData(R, G, B, block);
             return values;
         }
