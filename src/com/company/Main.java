@@ -55,6 +55,7 @@ public class Main {
                     pixelListInput.add(new pixelData(R, G, B, pixelArtInput));
                 }
             }
+
             //BufferedImage output = new BufferedImage(16*)
             System.out.println(pixelList.get(1).g);
             System.out.println(pixelListInput.get(1).g);
