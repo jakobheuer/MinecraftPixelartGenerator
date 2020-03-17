@@ -11,13 +11,13 @@ import java.awt.Component;
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 
-class pixelBlock {
+class pixelData {
     int r;
     int g;
     int b;
     File graphic;
 
-    public pixelBlock(int R, int G, int B, File texture) {
+    public pixelData(int R, int G, int B, File texture) {
         r = R;
         g = G;
         b = B;
@@ -28,27 +28,36 @@ class pixelBlock {
 public class Main {
     public static void main(String[] args) {
         BufferedImage pixelArtOutput = null;
+        int pixel;
+        int R,G,B;
         try{
             File block = new File("C:/Users/jakob/Documents/Programme/MinecraftGeneratorRaw/crafting_table_green.png");
             File texturFile = new File("C:/Users/jakob/Documents/Programme/MinecraftGeneratorRaw/inputTextures");
 
             File[] textureFileArray = texturFile.listFiles();
-            LinkedList <pixelBlock>pixelList = new LinkedList<pixelBlock>();
+            LinkedList <pixelData>pixelList = new LinkedList<pixelData>();
             for(int i=0; i<textureFileArray.length;i++){            //Einlesen der Average RGB Werte
                 pixelList.add(averageRGB(textureFileArray[i]));
             }
 
             File pixelArtInput = new File("C:/Users/jakob/Documents/Programme/MinecraftGeneratorRaw/pixelArtInput.png");
-            LinkedList <pixelBlock>pixelListInput = new LinkedList<pixelBlock>();
-            for(int i=0; i<textureFileArray.length;i++){            //Einlesen der Average RGB Werte
-                pixelList.add(averageRGB(textureFileArray[i]));
-            }
-
+            LinkedList <pixelData>pixelListInput = new LinkedList<pixelData>();
+            pixelListInput.add(averageRGB(pixelArtInput)); //Einlesen der Average RGB Werte
             pixelArtOutput = ImageIO.read(pixelArtInput);
             int widthPixelart = pixelArtOutput.getWidth();
             int heightPixelart = pixelArtOutput.getHeight();
+            for (int i = 0; i < heightPixelart; i++) {
+                for (int j = 0; j < widthPixelart; j++) {
+                    pixel = pixelArtOutput.getRGB(j, i);
+                    R = ((pixel >> 16) & 0xff);
+                    G = ((pixel >> 8) & 0xff);
+                    B = ((pixel) & 0xff);
+                    pixelListInput.add(new pixelData(R, G, B, pixelArtInput));
+                }
+            }
             //BufferedImage output = new BufferedImage(16*)
             System.out.println(pixelList.get(1).g);
+            System.out.println(pixelListInput.get(1).g);
             System.out.println("Done");
         }
         catch (Exception e){
@@ -56,7 +65,7 @@ public class Main {
         }
     }
 
-    public static pixelBlock averageRGB(File block){
+    public static pixelData averageRGB(File block){
         BufferedImage image = null;
         try {
             image = ImageIO.read(block);
@@ -84,11 +93,11 @@ public class Main {
             G = G / allPixels;
             B = B / allPixels;
             System.out.println("R " + R + ", G " + G + ", B " + B);
-            pixelBlock values = new pixelBlock(R, G, B, block);
+            pixelData values = new pixelData(R, G, B, block);
             return values;
         }
         catch (Exception e){
-            pixelBlock values = new pixelBlock(0, 0,0, null);
+            pixelData values = new pixelData(0, 0,0, null);
             return values;
         }
     }
