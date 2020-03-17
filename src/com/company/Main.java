@@ -4,6 +4,7 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.nio.Buffer;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.awt.Component;
@@ -26,7 +27,7 @@ class pixelBlock {
 
 public class Main {
     public static void main(String[] args) {
-        BufferedImage image = null;
+        BufferedImage pixelArtOutput = null;
         try{
             File block = new File("C:/Users/jakob/Documents/Programme/MinecraftGeneratorRaw/crafting_table_green.png");
             File texturFile = new File("C:/Users/jakob/Documents/Programme/MinecraftGeneratorRaw/inputTextures");
@@ -37,12 +38,16 @@ public class Main {
                 pixelList.add(averageRGB(textureFileArray[i]));
             }
 
-            File pixelArt = new File("C:/Users/jakob/Documents/Programme/MinecraftGeneratorRaw/pixelArtInput.png");
+            File pixelArtInput = new File("C:/Users/jakob/Documents/Programme/MinecraftGeneratorRaw/pixelArtInput.png");
             LinkedList <pixelBlock>pixelListInput = new LinkedList<pixelBlock>();
             for(int i=0; i<textureFileArray.length;i++){            //Einlesen der Average RGB Werte
                 pixelList.add(averageRGB(textureFileArray[i]));
             }
 
+            pixelArtOutput = ImageIO.read(pixelArtInput);
+            int widthPixelart = pixelArtOutput.getWidth();
+            int heightPixelart = pixelArtOutput.getHeight();
+            //BufferedImage output = new BufferedImage(16*)
             System.out.println(pixelList.get(1).g);
             System.out.println("Done");
         }
