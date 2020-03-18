@@ -51,8 +51,8 @@ public class Main {
             File texturFile = new File("./inputTextures");
 
             File[] textureFileArray = texturFile.listFiles();
-            LinkedList <pixelData>pixelList = new LinkedList<pixelData>();
-            for(int i=0; i<textureFileArray.length;i++){            //Einlesen der Average RGB Werte
+            LinkedList <pixelData>pixelList = new LinkedList<pixelData>();  //Linked List welche die RGB Werte und File Paths speichert
+            for(int i=0; i<textureFileArray.length;i++){            //Einlesen der Average RGB Werte der Minecraft Texturen
                 pixelList.add(averageRGB(textureFileArray[i]));
             }
 
@@ -68,21 +68,21 @@ public class Main {
                     G = ((pixel >> 8) & 0xff);
                     B = ((pixel) & 0xff);
                     for(int k = 0; k < pixelList.size(); k++){
-                        deviation = Math.abs(R-pixelList.get(k).r) + Math.abs(G-pixelList.get(k).g) + Math.abs(B-pixelList.get(k).b);
+                        deviation = Math.abs(R-pixelList.get(k).r) + Math.abs(G-pixelList.get(k).g) + Math.abs(B-pixelList.get(k).b);   //Abweichung von der Textur ausrechnen
                         if(k==0){
-                            smallestDeviation = deviation;
+                            smallestDeviation = deviation;              //Init
                             bestFitting = pixelList.get(k).graphic;
                         }
                         else{
                             if(deviation < smallestDeviation){
                                 smallestDeviation = deviation;
-                                bestFitting = pixelList.get(k).graphic;
+                                bestFitting = pixelList.get(k).graphic; //Speichern der besten Textur
                             }
                         }
                     }
                     bestFittingImage = ImageIO.read(bestFitting);
                     Graphics2D g2 = pixelArtOutputImage.createGraphics();
-                    g2.drawImage(bestFittingImage,null,j*16,i*16);
+                    g2.drawImage(bestFittingImage,null,j*16,i*16);  //An die entsprechende Stelle die Textur kopieren
                     g2.dispose();
                 }
                 loading = ((double)i / (double)heightPixelart) * 100;
