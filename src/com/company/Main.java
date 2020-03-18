@@ -46,6 +46,7 @@ public class Main {
         int smallestDeviation = 0;
         File bestFitting = null;
         BufferedImage bestFittingImage = null;
+        double loading;
         try{
             File block = new File("C:/Users/jakob/IdeaProjects/MinecraftPixelartGenerator/crafting_table_green.png");
             File texturFile = new File("C:/Users/jakob/IdeaProjects/MinecraftPixelartGenerator/inputTextures");
@@ -56,7 +57,7 @@ public class Main {
                 pixelList.add(averageRGB(textureFileArray[i]));
             }
 
-            File pixelArtInput = new File("C:/Users/jakob/IdeaProjects/MinecraftPixelartGenerator/coffee.png");     //Input file
+            File pixelArtInput = new File("C:/Users/jakob/IdeaProjects/MinecraftPixelartGenerator/logo.png");     //Input file
             pixelartInputImage = ImageIO.read(pixelArtInput);
             int widthPixelart = pixelartInputImage.getWidth();
             int heightPixelart = pixelartInputImage.getHeight();
@@ -80,16 +81,16 @@ public class Main {
                             }
                         }
                     }
-                    /*System.out.printf("Kleinste Abweichung von Pixel (%d/%d) ", j,i);
-                    System.out.printf("hat " + pixelList.get(bestFitting).graphic + "\n");*/
                     bestFittingImage = ImageIO.read(bestFitting);
                     Graphics2D g2 = pixelArtOutputImage.createGraphics();
                     g2.drawImage(bestFittingImage,null,j*16,i*16);
                     g2.dispose();
                 }
+                loading = ((double)i / (double)heightPixelart) * 100;
+                loading = Math.round(loading);
+                System.out.println("Abgeschlossen: " + loading + "%" );
             }
-            ImageIO.write(pixelArtOutputImage, "png", new File("C:/Users/jakob/IdeaProjects/MinecraftPixelartGenerator/coffeeOutput.png"));     //Output file
-
+            ImageIO.write(pixelArtOutputImage, "png", new File("C:/Users/jakob/IdeaProjects/MinecraftPixelartGenerator/logoOutput.png"));     //Output file
             System.out.println("Done");
         }
         catch (Exception e){
