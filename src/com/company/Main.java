@@ -48,8 +48,7 @@ public class Main {
         BufferedImage bestFittingImage = null;
         double loading;
         try{
-            File block = new File("C:/Users/jakob/IdeaProjects/MinecraftPixelartGenerator/crafting_table_green.png");
-            File texturFile = new File("C:/Users/jakob/IdeaProjects/MinecraftPixelartGenerator/inputTextures");
+            File texturFile = new File("./inputTextures");
 
             File[] textureFileArray = texturFile.listFiles();
             LinkedList <pixelData>pixelList = new LinkedList<pixelData>();
@@ -57,7 +56,7 @@ public class Main {
                 pixelList.add(averageRGB(textureFileArray[i]));
             }
 
-            File pixelArtInput = new File("C:/Users/jakob/IdeaProjects/MinecraftPixelartGenerator/logo.png");     //Input file
+            File pixelArtInput = new File("./pixelArtInput.png");     //Input file
             pixelartInputImage = ImageIO.read(pixelArtInput);
             int widthPixelart = pixelartInputImage.getWidth();
             int heightPixelart = pixelartInputImage.getHeight();
@@ -90,7 +89,7 @@ public class Main {
                 loading = Math.round(loading);
                 System.out.println("Abgeschlossen: " + loading + "%" );
             }
-            ImageIO.write(pixelArtOutputImage, "png", new File("C:/Users/jakob/IdeaProjects/MinecraftPixelartGenerator/logoOutput.png"));     //Output file
+            ImageIO.write(pixelArtOutputImage, "png", new File("./logoOutput.png"));     //Output file
             System.out.println("Done");
         }
         catch (Exception e){
